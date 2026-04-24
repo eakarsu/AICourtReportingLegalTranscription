@@ -1,0 +1,13 @@
+{
+  "name": "ai-court-reporting",
+  "version": "1.0.0",
+  "description": "AI Court Reporting & Legal Transcription Service",
+  "private": true,
+  "scripts": {
+    "server": "cd server && node index.js",
+    "server:dev": "cd server && npx nodemon index.js",
+    "client": "cd client && npx react-scripts start",
+    "seed": "cd server && node seed.js",
+    "start": "bash start.sh"
+  }
+}
