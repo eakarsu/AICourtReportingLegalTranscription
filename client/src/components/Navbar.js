@@ -7,6 +7,7 @@ const mainLinks = [
   { label: 'Cases', path: '/cases' },
   { label: 'Transcripts', path: '/transcripts' },
   { label: 'AI Features', path: '/ai', highlight: true },
+  { label: 'AI Features (New)', path: '/ai-new', highlight: true },
 ];
 
 const moreLinks = [

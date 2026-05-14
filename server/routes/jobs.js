@@ -1,19 +1,59 @@
 const router = require('express').Router();
 const pool = require('../db');
 
-// GET / - list all jobs
+// GET / - list all jobs (with pagination)
 router.get('/', async (req, res) => {
   try {
-    const { search } = req.query;
-    let query = 'SELECT j.*, r.name as reporter_name, c.firm_name as client_name FROM jobs j LEFT JOIN reporters r ON j.court_reporter_id = r.id LEFT JOIN clients c ON j.client_id = c.id';
+    const { search, status, page: pageStr, limit: limitStr } = req.query;
+    const page = Math.max(1, parseInt(pageStr) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(limitStr) || 20));
+    const offset = (page - 1) * limit;
+
+    const conditions = [];
     const params = [];
+    let paramIdx = 1;
+
     if (search) {
       params.push(`%${search}%`);
-      query += ' WHERE j.case_name ILIKE $1 OR j.case_number ILIKE $1 OR j.location ILIKE $1 OR j.status ILIKE $1 OR r.name ILIKE $1 OR c.firm_name ILIKE $1';
+      conditions.push(`(j.case_name ILIKE $${paramIdx} OR j.case_number ILIKE $${paramIdx} OR j.location ILIKE $${paramIdx} OR j.status ILIKE $${paramIdx} OR r.name ILIKE $${paramIdx} OR c.firm_name ILIKE $${paramIdx})`);
+      paramIdx++;
     }
-    query += ' ORDER BY j.created_at DESC';
-    const result = await pool.query(query, params);
-    res.json(result.rows);
+
+    if (status) {
+      params.push(status);
+      conditions.push(`j.status = $${paramIdx}`);
+      paramIdx++;
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    const baseQuery = `FROM jobs j
+      LEFT JOIN reporters r ON j.court_reporter_id = r.id
+      LEFT JOIN clients c ON j.client_id = c.id
+      ${whereClause}`;
+
+    const countResult = await pool.query(`SELECT COUNT(*) ${baseQuery}`, params);
+    const total = parseInt(countResult.rows[0].count);
+
+    params.push(limit, offset);
+    const dataResult = await pool.query(
+      `SELECT j.*, r.name as reporter_name, c.firm_name as client_name
+       ${baseQuery}
+       ORDER BY j.created_at DESC LIMIT $${paramIdx} OFFSET $${paramIdx + 1}`,
+      params
+    );
+
+    res.json({
+      data: dataResult.rows,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        hasNextPage: page * limit < total,
+        hasPrevPage: page > 1
+      }
+    });
   } catch (err) {
     console.error('List jobs error:', err);
     res.status(500).json({ error: 'Server error' });

@@ -7,7 +7,23 @@ import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import FeaturePage from './pages/FeaturePage';
 import AIFeaturesPage from './pages/AIFeaturesPage';
+import AIFeaturesNewPage from './pages/AIFeaturesNewPage';
 import Navbar from './components/Navbar';
+
+// // === Batch 02 Gaps & Frontend Mounts ===
+import CfPredictiveCaseComplexityScoring from './pages/CfPredictiveCaseComplexityScoring';
+import CfAutomatedExhibitExtraction from './pages/CfAutomatedExhibitExtraction';
+import CfPrecedentDepositionSearch from './pages/CfPrecedentDepositionSearch';
+import CfCourtFilingAutomation from './pages/CfCourtFilingAutomation';
+import CfReporterWellnessUtilization from './pages/CfReporterWellnessUtilization';
+import GapCasesLacksAnalyzeCaseTimelineOrPredictDepositionNeed from './pages/GapCasesLacksAnalyzeCaseTimelineOrPredictDepositionNeed';
+import GapDeliveriesLacksOptimizeDeliveryRouting from './pages/GapDeliveriesLacksOptimizeDeliveryRouting';
+import GapExhibitsLacksExtractExhibitMetadataOrAnalyzeExhibitR from './pages/GapExhibitsLacksExtractExhibitMetadataOrAnalyzeExhibitR';
+import GapVideosyncsLacksAiDrivenAudioVideoAlignment from './pages/GapVideosyncsLacksAiDrivenAudioVideoAlignment';
+import GapLimitedIntegrationWithCourtCalendarsLegalResearchLexi from './pages/GapLimitedIntegrationWithCourtCalendarsLegalResearchLexi';
+import GapNoSecureCloudVaultForSensitiveTranscripts from './pages/GapNoSecureCloudVaultForSensitiveTranscripts';
+import GapNoContinuingEducationTrackingLayeredOnCertifications from './pages/GapNoContinuingEducationTrackingLayeredOnCertifications';
+import GapNoWebhooksOrNotificationSystem from './pages/GapNoWebhooksOrNotificationSystem';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
@@ -707,6 +723,22 @@ function App() {
         <Route path="/rush-fees" element={<ProtectedRoute><FeaturePage {...rushFeesConfig} /></ProtectedRoute>} />
 
         <Route path="/ai" element={<ProtectedRoute><AIFeaturesPage /></ProtectedRoute>} />
+        <Route path="/ai-new" element={<ProtectedRoute><AIFeaturesNewPage /></ProtectedRoute>} />
+      
+        {/* // === Batch 02 Gaps & Frontend Mounts === */}
+        <Route path="/cf/predictive-case-complexity-scoring" element={<CfPredictiveCaseComplexityScoring />} />
+        <Route path="/cf/automated-exhibit-extraction" element={<CfAutomatedExhibitExtraction />} />
+        <Route path="/cf/precedent-deposition-search" element={<CfPrecedentDepositionSearch />} />
+        <Route path="/cf/court-filing-automation" element={<CfCourtFilingAutomation />} />
+        <Route path="/cf/reporter-wellness-utilization" element={<CfReporterWellnessUtilization />} />
+        <Route path="/gap/cases-lacks-analyze-case-timeline-or-predict-deposition-need" element={<GapCasesLacksAnalyzeCaseTimelineOrPredictDepositionNeed />} />
+        <Route path="/gap/deliveries-lacks-optimize-delivery-routing" element={<GapDeliveriesLacksOptimizeDeliveryRouting />} />
+        <Route path="/gap/exhibits-lacks-extract-exhibit-metadata-or-analyze-exhibit-r" element={<GapExhibitsLacksExtractExhibitMetadataOrAnalyzeExhibitR />} />
+        <Route path="/gap/videosyncs-lacks-ai-driven-audio-video-alignment" element={<GapVideosyncsLacksAiDrivenAudioVideoAlignment />} />
+        <Route path="/gap/limited-integration-with-court-calendars-legal-research-lexi" element={<GapLimitedIntegrationWithCourtCalendarsLegalResearchLexi />} />
+        <Route path="/gap/no-secure-cloud-vault-for-sensitive-transcripts" element={<GapNoSecureCloudVaultForSensitiveTranscripts />} />
+        <Route path="/gap/no-continuing-education-tracking-layered-on-certifications" element={<GapNoContinuingEducationTrackingLayeredOnCertifications />} />
+        <Route path="/gap/no-webhooks-or-notification-system" element={<GapNoWebhooksOrNotificationSystem />} />
       </Routes>
     </div>
   );
