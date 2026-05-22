@@ -70,6 +70,7 @@ app.use('/api/ai', require('./routes/filingAutomation'));
 app.use('/api/ai', require('./routes/reporterWellness'));
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/deadlines', deadlineRoutes);
+app.use('/api/realtime-rough-draft-qc', require('./routes/realtimeRoughDraftQc'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

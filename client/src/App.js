@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import FeaturePage from './pages/FeaturePage';
 import AIFeaturesPage from './pages/AIFeaturesPage';
 import AIFeaturesNewPage from './pages/AIFeaturesNewPage';
+import RealtimeRoughDraftQc from './pages/RealtimeRoughDraftQc';
 import Navbar from './components/Navbar';
 
 // // === Batch 02 Gaps & Frontend Mounts ===
@@ -24,6 +25,11 @@ import GapLimitedIntegrationWithCourtCalendarsLegalResearchLexi from './pages/Ga
 import GapNoSecureCloudVaultForSensitiveTranscripts from './pages/GapNoSecureCloudVaultForSensitiveTranscripts';
 import GapNoContinuingEducationTrackingLayeredOnCertifications from './pages/GapNoContinuingEducationTrackingLayeredOnCertifications';
 import GapNoWebhooksOrNotificationSystem from './pages/GapNoWebhooksOrNotificationSystem';
+
+import CodexCustomVizFeature from './pages/CodexCustomVizFeature';
+import CodexOperationsFeature from './pages/CodexOperationsFeature';
+
+import TimelineView from './pages/TimelineView';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
@@ -696,6 +702,10 @@ function App() {
     <div className="App">
       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
+        <Route path="/insights/timeline" element={<ProtectedRoute><TimelineView /></ProtectedRoute>} />
+        <Route path="/codex/custom-viz" element={<ProtectedRoute><CodexCustomVizFeature /></ProtectedRoute>} />
+        <Route path="/codex/operations" element={<ProtectedRoute><CodexOperationsFeature /></ProtectedRoute>} />
+
         <Route path="/login" element={<LoginPage />} />
 
         <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
@@ -724,6 +734,7 @@ function App() {
 
         <Route path="/ai" element={<ProtectedRoute><AIFeaturesPage /></ProtectedRoute>} />
         <Route path="/ai-new" element={<ProtectedRoute><AIFeaturesNewPage /></ProtectedRoute>} />
+        <Route path="/realtime-rough-draft-qc" element={<ProtectedRoute><RealtimeRoughDraftQc /></ProtectedRoute>} />
       
         {/* // === Batch 02 Gaps & Frontend Mounts === */}
         <Route path="/cf/predictive-case-complexity-scoring" element={<CfPredictiveCaseComplexityScoring />} />
