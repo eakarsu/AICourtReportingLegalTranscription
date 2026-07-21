@@ -1,0 +1,6 @@
+'use strict';
+const test=require('node:test');const assert=require('node:assert/strict');const w=require('../services/transcriptWorkflow');const {validateRuntime}=require('../config/runtime');
+test('media ingestion requires authorization and custody digest',()=>assert.throws(()=>w.validateMedia({objectUri:'https://vault.test/a',sha256:'a'.repeat(64),durationMs:10}),/authorization/));
+test('corrections preserve page-line evidence',()=>{assert.throws(()=>w.validateCorrection({originalText:'a',correctedText:'a',pageLineReference:'1:2',reason:'typo'}),/change/);assert.doesNotThrow(()=>w.validateCorrection({originalText:'form',correctedText:'from',pageLineReference:'1:2',reason:'stenographic correction'}));});
+test('certification requires reporter, redaction review, and no pending corrections',()=>{const version={state:'certification_pending',redaction_status:'reviewed'};assert.equal(w.canCertify({actor:{role:'reporter'},version,pendingCorrections:0,credentialReference:'NCRA-1'}),true);assert.throws(()=>w.canCertify({actor:{role:'editor'},version,pendingCorrections:0,credentialReference:'x'}),/reporter/);});
+test('runtime rejects missing database',()=>assert.throws(()=>validateRuntime({JWT_SECRET:'x'.repeat(32)}),/DATABASE_URL/));

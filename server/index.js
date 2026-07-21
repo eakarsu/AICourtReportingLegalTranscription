@@ -1,10 +1,19 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+require('./config/runtime').validateRuntime();
 const express = require('express');
 const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
+const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
+  .split(',').map((origin) => origin.trim()).filter(Boolean);
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || corsOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS blocked: ${origin}`));
+  },
+  credentials: true,
+}));
 app.use(express.json({ limit: '10mb' }));
 
 // Route imports
@@ -78,31 +87,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error', message: err.message });
 });
 
-const PORT = process.env.SERVER_PORT || 3001;
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-cases-lacks-analyze-case-timeline-or-predict-deposition-need', require('./routes/gap_cases_lacks_analyze_case_timeline_or_predict_deposition_need'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-deliveries-lacks-optimize-delivery-routing', require('./routes/gap_deliveries_lacks_optimize_delivery_routing'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-exhibits-lacks-extract-exhibit-metadata-or-analyze-exhibit-r', require('./routes/gap_exhibits_lacks_extract_exhibit_metadata_or_analyze_exhibit_r'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-videosyncs-lacks-ai-driven-audio-video-alignment', require('./routes/gap_videosyncs_lacks_ai_driven_audio_video_alignment'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-limited-integration-with-court-calendars-legal-research-lexi', require('./routes/gap_limited_integration_with_court_calendars_legal_research_lexi'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-no-secure-cloud-vault-for-sensitive-transcripts', require('./routes/gap_no_secure_cloud_vault_for_sensitive_transcripts'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-no-continuing-education-tracking-layered-on-certifications', require('./routes/gap_no_continuing_education_tracking_layered_on_certifications'));
-
-// // === Batch 02 Gaps & Frontend Mounts ===
-app.use('/api/gap-no-webhooks-or-notification-system', require('./routes/gap_no_webhooks_or_notification_system'));
-
+const PORT = process.env.PORT || process.env.SERVER_PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
