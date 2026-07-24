@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import API from '../services/api';
 import { toast } from 'react-toastify';
 
+const demoEmail = process.env.REACT_APP_ENABLE_DEMO_CREDENTIAL_AUTOFILL === 'true' ? process.env.REACT_APP_DEMO_EMAIL || '' : '';
+const demoPassword = process.env.REACT_APP_ENABLE_DEMO_CREDENTIAL_AUTOFILL === 'true' ? process.env.REACT_APP_DEMO_PASSWORD || '' : '';
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,14 +32,14 @@ const LoginPage = () => {
   };
 
   const handleQuickLogin = () => {
-    setEmail('admin@courtreport.com');
-    setPassword('password123');
+    setEmail(demoEmail);
+    setPassword(demoPassword);
     setTimeout(async () => {
       setLoading(true);
       try {
         const response = await API.post('/auth/login', {
-          email: 'admin@courtreport.com',
-          password: 'password123',
+          email: demoEmail,
+          password: demoPassword,
         });
         const { token, user } = response.data;
         localStorage.setItem('token', token);
@@ -112,7 +115,7 @@ const LoginPage = () => {
           style={styles.quickLoginBtn}
           type="button"
           onClick={handleQuickLogin}
-          disabled={loading}
+          disabled={loading || !demoEmail || !demoPassword}
         >
           Quick Login (Demo)
         </button>

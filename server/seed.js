@@ -7,6 +7,12 @@ const bcrypt = require('bcryptjs');
 // ---------------------------------------------------------------------------
 const log = (msg) => console.log(`[seed] ${msg}`);
 
+function requireDemoPassword() {
+  const password = process.env.DEMO_PASSWORD || process.env.SEED_DEMO_PASSWORD || process.env.DEMO_SEED_PASSWORD || '';
+  if (password.length < 12 || password.length > 1024) throw new Error('DEMO_PASSWORD must contain 12-1024 characters');
+  return password;
+}
+
 async function run() {
   // -------------------------------------------------------------------
   // 1. Ensure database & role exist (connect to default "postgres" db)
@@ -380,7 +386,7 @@ async function run() {
     // -----------------------------------------------------------------
     log('Seeding data...');
 
-    const passwordHash = await bcrypt.hash('password123', 10);
+    const passwordHash = await bcrypt.hash(requireDemoPassword(), 10);
 
     // ---- users (22 rows) ----
     log('  Seeding users...');
