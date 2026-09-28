@@ -34,26 +34,6 @@ const LoginPage = () => {
   const handleQuickLogin = () => {
     setEmail(demoEmail);
     setPassword(demoPassword);
-    setTimeout(async () => {
-      setLoading(true);
-      try {
-        const response = await API.post('/auth/login', {
-          email: demoEmail,
-          password: demoPassword,
-        });
-        const { token, user } = response.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        toast.success('Login successful. Welcome back!');
-        navigate('/');
-      } catch (err) {
-        const message =
-          err.response?.data?.message || 'Login failed. Please check your credentials.';
-        toast.error(message);
-      } finally {
-        setLoading(false);
-      }
-    }, 100);
   };
 
   return (
@@ -102,7 +82,7 @@ const LoginPage = () => {
             type="submit"
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Login'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
@@ -117,7 +97,7 @@ const LoginPage = () => {
           onClick={handleQuickLogin}
           disabled={loading || !demoEmail || !demoPassword}
         >
-          Quick Login (Demo)
+          Auto Fill Demo Credentials
         </button>
 
         <p style={styles.footer}>
