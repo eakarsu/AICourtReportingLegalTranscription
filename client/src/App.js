@@ -10,6 +10,7 @@ import AIFeaturesPage from './pages/AIFeaturesPage';
 import AIFeaturesNewPage from './pages/AIFeaturesNewPage';
 import RealtimeRoughDraftQc from './pages/RealtimeRoughDraftQc';
 import Navbar from './components/Navbar';
+import AppSidebar from './components/AppSidebar';
 
 // // === Batch 02 Gaps & Frontend Mounts ===
 import CfPredictiveCaseComplexityScoring from './pages/CfPredictiveCaseComplexityScoring';
@@ -37,10 +38,10 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
   return (
-    <>
-      <Navbar />
-      {children}
-    </>
+    <div className="codex-nav-shell">
+      <AppSidebar />
+      <div className="codex-protected-main"><Navbar />{children}</div>
+    </div>
   );
 };
 
