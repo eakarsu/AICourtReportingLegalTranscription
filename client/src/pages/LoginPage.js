@@ -97,7 +97,7 @@ const LoginPage = () => {
           onClick={handleQuickLogin}
           disabled={loading || !demoEmail || !demoPassword}
         >
-          Auto Fill Demo Credentials
+          Fill Demo Credentials
         </button>
 
         <p style={styles.footer}>

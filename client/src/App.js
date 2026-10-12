@@ -1,3 +1,4 @@
+import AIReportLibrary from "./components/AIReportLibrary";
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -700,7 +701,7 @@ const rushFeesConfig = {
 
 function App() {
   return (
-    <div className="App">
+    <><AIReportLibrary floating /><div className="App">
       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         <Route path="/insights/timeline" element={<ProtectedRoute><TimelineView /></ProtectedRoute>} />
@@ -752,7 +753,7 @@ function App() {
         <Route path="/gap/no-continuing-education-tracking-layered-on-certifications" element={<GapNoContinuingEducationTrackingLayeredOnCertifications />} />
         <Route path="/gap/no-webhooks-or-notification-system" element={<GapNoWebhooksOrNotificationSystem />} />
       </Routes>
-    </div>
+    </div></>
   );
 }
 

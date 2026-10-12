@@ -1,3 +1,6 @@
+
+import FullAIExamples, { useFullAIExamples } from "../components/FullAIExamples.jsx";
+import AIReport from '../components/AIReport';
 import React, { useState } from 'react';
 import API from '../services/api';
 import { toast } from 'react-toastify';
@@ -194,6 +197,8 @@ function AIResultCard({ result }) {
 }
 
 export default function AIFeaturesPage() {
+  const fullAIExamples = useFullAIExamples();
+
   const [expanded, setExpanded] = useState(null);
   const [inputs, setInputs] = useState({});
   const [loading, setLoading] = useState({});
@@ -231,7 +236,7 @@ export default function AIFeaturesPage() {
 
       const response = await API.post(feature.endpoint, payload);
       const data = response.data;
-      const resultText = data.result || data.data || data.message || JSON.stringify(data, null, 2);
+      const resultText = data.result ?? data.data ?? data.message ?? data;
       setResults((prev) => ({ ...prev, [feature.id]: resultText }));
       toast.success(`${feature.title} completed successfully!`);
     } catch (error) {
@@ -243,7 +248,7 @@ export default function AIFeaturesPage() {
   };
 
   return (
-    <div className="ai-page">
+    <div className="ai-page" data-full-ai-workspace="AIFeaturesPage"><FullAIExamples controller={fullAIExamples} disabled={Boolean(Object.values(loading).some(Boolean))} />
       <style>{`
         .ai-page {
           max-width: 1200px;
@@ -605,14 +610,14 @@ export default function AIFeaturesPage() {
                       type="text"
                       placeholder={feature.placeholder}
                       value={inputValue}
-                      onChange={(e) => handleInputChange(feature.id, e.target.value)}
+                      onChange={(e) => handleInputChange(feature.id, e.target.value)} data-full-ai-field={fullAIExamples.bind({ current: inputValue, change: (e) => handleInputChange(feature.id, e.target.value), label: "inputValue", manual: false, json: false }, "p1-16651", [(typeof feature === 'object' ? feature?.key ?? feature?.name ?? feature?.id ?? '' : feature)].join(":"))}
                     />
                   ) : (
                     <textarea
                       className="ai-textarea"
                       placeholder={feature.placeholder}
                       value={inputValue}
-                      onChange={(e) => handleInputChange(feature.id, e.target.value)}
+                      onChange={(e) => handleInputChange(feature.id, e.target.value)} data-full-ai-field={fullAIExamples.bind({ current: inputValue, change: (e) => handleInputChange(feature.id, e.target.value), label: "inputValue", manual: false, json: false }, "p1-16985", [(typeof feature === 'object' ? feature?.key ?? feature?.name ?? feature?.id ?? '' : feature)].join(":"))}
                     />
                   )}
 
@@ -632,12 +637,12 @@ export default function AIFeaturesPage() {
                     </button>
                   )}
 
-                  {result && (
+                  {result !== null && result !== undefined && (
                     <>
                       <div className="ai-result-badge">
                         <span>&#10003;</span> AI Result
                       </div>
-                      <AIResultCard result={result} />
+                      <AIReport response={result} title={feature.title} />
                     </>
                   )}
                 </div>

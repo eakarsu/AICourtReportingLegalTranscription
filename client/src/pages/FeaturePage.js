@@ -90,11 +90,15 @@ const FeaturePage = ({ title, endpoint, columns, formFields }) => {
     try {
       const params = searchQuery ? { search: searchQuery } : {};
       const response = await API.get(endpoint, { params });
-      const data = Array.isArray(response.data)
-        ? response.data
-        : response.data.results || response.data.data || [];
+      const payload = response.data;
+      const data = Array.isArray(payload) ? payload
+        : Array.isArray(payload?.data) ? payload.data
+        : Array.isArray(payload?.results) ? payload.results
+        : null;
+      if (!data) throw new Error('The server returned an invalid record list.');
       setItems(data);
     } catch (err) {
+      setItems([]);
       toast.error(`Failed to load ${title.toLowerCase()}: ${err.message}`);
     } finally {
       setLoading(false);

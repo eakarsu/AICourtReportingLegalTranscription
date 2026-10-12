@@ -1,3 +1,6 @@
+
+import FullAIExamples, { useFullAIExamples } from "../components/FullAIExamples.jsx";
+import AIReport from '../components/AIReport';
 import React, { useState } from 'react';
 import API from '../services/api';
 import { toast } from 'react-toastify';
@@ -88,6 +91,8 @@ const NEW_AI_FEATURES = [
 ];
 
 export default function AIFeaturesNewPage() {
+  const fullAIExamples = useFullAIExamples();
+
   const [expanded, setExpanded] = useState(NEW_AI_FEATURES[0].id);
   const [forms, setForms] = useState({});
   const [loading, setLoading] = useState({});
@@ -128,7 +133,7 @@ export default function AIFeaturesNewPage() {
     try {
       const response = await API.post(feature.endpoint, payload);
       const data = response.data;
-      const resultText = data[feature.resultKey] || data.result || JSON.stringify(data, null, 2);
+      const resultText = data[feature.resultKey] ?? data.result ?? data;
       setResults((prev) => ({ ...prev, [feature.id]: resultText }));
       toast.success(`${feature.title} completed!`);
     } catch (error) {
@@ -140,7 +145,7 @@ export default function AIFeaturesNewPage() {
   };
 
   return (
-    <div className="ai-page">
+    <div className="ai-page" data-full-ai-workspace="AIFeaturesNewPage"><FullAIExamples controller={fullAIExamples} disabled={Boolean(Object.values(loading).some(Boolean))} />
       <style>{`
         .ai-page { max-width: 1200px; margin: 0 auto; padding: 32px 24px; font-family: 'Inter', -apple-system, sans-serif; }
         .ai-page-title { font-size: 28px; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
@@ -199,7 +204,7 @@ export default function AIFeaturesNewPage() {
                         className="ai-textarea"
                         placeholder={f.placeholder}
                         value={form[f.key] || ''}
-                        onChange={(e) => setFieldValue(feature.id, f.key, e.target.value)}
+                        onChange={(e) => setFieldValue(feature.id, f.key, e.target.value)} data-full-ai-field={fullAIExamples.bind({ current: form[f.key] || '', change: (e) => setFieldValue(feature.id, f.key, e.target.value), label: "form[f.key]", manual: false, json: false }, "p1-10103", [(typeof feature === 'object' ? feature?.key ?? feature?.name ?? feature?.id ?? '' : feature),(typeof f === 'object' ? f?.key ?? f?.name ?? f?.id ?? '' : f),f.key].join(":"))}
                       />
                     ) : (
                       <input
@@ -207,7 +212,7 @@ export default function AIFeaturesNewPage() {
                         type="text"
                         placeholder={f.placeholder}
                         value={form[f.key] || ''}
-                        onChange={(e) => setFieldValue(feature.id, f.key, e.target.value)}
+                        onChange={(e) => setFieldValue(feature.id, f.key, e.target.value)} data-full-ai-field={fullAIExamples.bind({ current: form[f.key] || '', change: (e) => setFieldValue(feature.id, f.key, e.target.value), label: "form[f.key]", manual: false, json: false }, "p1-10427", [(typeof feature === 'object' ? feature?.key ?? feature?.name ?? feature?.id ?? '' : feature),(typeof f === 'object' ? f?.key ?? f?.name ?? f?.id ?? '' : f),f.key].join(":"))}
                       />
                     )}
                   </React.Fragment>
@@ -223,7 +228,7 @@ export default function AIFeaturesNewPage() {
                 </button>
 
                 {isLoading && <div className="ai-loading">AI is processing...</div>}
-                {result && <div className="ai-result">{typeof result === 'string' ? result : JSON.stringify(result, null, 2)}</div>}
+                {result !== null && result !== undefined && <AIReport response={result} title={feature.title} />}
               </div>
             )}
           </div>
