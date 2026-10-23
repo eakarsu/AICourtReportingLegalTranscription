@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
+app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
 const corsOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
   .split(',').map((origin) => origin.trim()).filter(Boolean);
@@ -79,6 +80,9 @@ app.use('/api/ai', require('./routes/filingAutomation'));
 app.use('/api/ai', require('./routes/reporterWellness'));
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/deadlines', deadlineRoutes);
+const fp31cCourt = require('./routes/fp31c').createFeaturePack({ authenticate: require('./middleware/auth'), getRecords: async () => { try { const pool2 = require('./db'); const r = await pool2.query('SELECT * FROM jobs ORDER BY created_at DESC LIMIT 50'); return r.rows; } catch { return []; } } });
+app.use('/api/tasks', fp31cCourt.tasksRouter);
+app.use('/api/fp31c', fp31cCourt.packRouter);
 app.use('/api/realtime-rough-draft-qc', require('./routes/realtimeRoughDraftQc'));
 
 // Error handling middleware
